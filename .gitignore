@@ -1,0 +1,111 @@
+import pickle
+def write():
+    f=open("hotel.dat", "wb")
+    n=int(input("How many guest records to add?"))
+    for i in range(n):
+        guestid=int(input("Enter guest ID:"))
+        name=input("Enter name:")
+        room=int(input("Enter room no.:"))
+        days=int(input("Enter no. of days guest is staying for: "))
+        data=[guestid,name,room,days]
+        pickle.dump(data,f)
+    f.close()
+    print("Records added")
+def display():
+    try:
+        f=open("hotel.dat", "rb")
+        while True:
+            s=pickle.load(f)
+            print(s)
+    except EOFError:
+        f.close()
+def search():
+    try:
+        f=open("hotel.dat", "rb")
+        r=int(input("Enter guest ID to search:"))
+        found=0
+        while True:
+            s=pickle.load(f)
+            if s[0]==r:
+                print("Guest found:")
+                print(s)
+                found=1
+                break
+    except EOFError:
+        f.close()
+    if found==0:
+        print("Guest not found")
+    f.close()
+def count():
+    count=0
+    try:
+        f=open("hotel.dat", "rb")
+        while True:
+            pickle.load(f)
+            count+=1
+    except EOFError:
+        f.close()
+        print("Number of guests:",count)
+def update():
+    f=open("hotel.dat", "rb+")
+    rec=[]
+    while True:
+        try:
+            rec.append(pickle.load(f))
+        except EOFError:
+            break
+    ids=int(input("Enter guest ID to update: "))
+    u=0
+    for i in range(len(rec)):
+        if rec[i][0]==ids:
+            print("Old record:",rec[i])
+            while True:
+                print("To update guest ID enter: 'guestid'")
+                print("To update name enter: 'name'")
+                print("To update room no. enter: 'room'")
+                print("To update no. of days staying enter: 'days'")
+                a=input("What do you want to update?")
+                if a=="guestid":
+                    rec[i][0]=int(input("Enter new guest ID:"))
+                elif a=="name":
+                    rec[i][1]=input("Enter new guest name:")
+                elif a=="room":
+                    rec[i][2]=int(input("Enter new room no.:"))
+                elif a=="days":
+                    rec[i][3]=int(input("Enter new number of days to stay:"))
+                else:
+                    print("Invalid choice")
+                ch=input("Do you want to update more?(Y/N):")
+                if ch=="n" or ch=="N":
+                    u=1
+                    print("Record updated")
+                    break
+        else:
+            print("Guest ID not found.")
+    f.seek(0)
+    for dat in rec:
+        pickle.dump(dat, f)
+    f.close()
+while True:
+    print("Hotel Management Menu")
+    print("1 to add records of guests")
+    print("2 to display all records of guest")
+    print("3 to search a record")
+    print("4 to count total no. of guests")
+    print("5 to update a record")
+    print("6 to exit")
+    ch=input("Enter choice:")
+    if ch=="1":
+        write()
+    elif ch=="2":
+        display()
+    elif ch=="3":
+        search()
+    elif ch=="4":
+        count()
+    elif ch=="5":
+        update()
+    elif ch=="6":
+        break
+    else:
+        print("Invalid choice")
