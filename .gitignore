@@ -86,6 +86,43 @@ def update():
     for dat in rec:
         pickle.dump(dat, f)
     f.close()
+def delete():
+    rec=[]
+    try:
+        f=open("hotel.dat", "rb")
+        while True:
+            rec.append(pickle.load(f))
+    except EOFError:
+        f.close()
+    gid=int(input("Enter Guest ID to be deleted:"))
+    newR=[]
+    flag=0
+    for i in rec:
+        if i[0]==gid:
+            print("Record deleted")
+            flag=1
+        else:
+            newR.append(i)
+    if flag==0:
+        print("Record not found")
+    else:
+        f2=open("hotel.dat", "wb")
+        for dat in newR:
+            pickle.dump(dat, f2)
+def rooms():
+    rec=[]
+    rec2=[]
+    try:
+        f=open("hotel.dat","rb")
+        while True:
+            rec.append(pickle.load(f))
+    except EOFError:
+        f.close()
+    for i in rec:
+        a=i[2]
+        rec2.append(a)
+    print("The rooms which are occupied are:",rec2)
+    f.close()
 while True:
     print("Hotel Management Menu")
     print("1 to add records of guests")
@@ -93,7 +130,9 @@ while True:
     print("3 to search a record")
     print("4 to count total no. of guests")
     print("5 to update a record")
-    print("6 to exit")
+    print("6 to delete a record")
+    print("7 to display occupied rooms")
+    print("8 to exit")
     ch=input("Enter choice:")
     if ch=="1":
         write()
@@ -106,6 +145,10 @@ while True:
     elif ch=="5":
         update()
     elif ch=="6":
+        delete()
+    elif ch=="7":
+        rooms()
+    elif ch=="8":
         break
     else:
         print("Invalid choice")
